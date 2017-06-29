@@ -20,9 +20,7 @@ MotionMap::MotionMap(Stream *stream, InstanceManager *manager)
 	int npix = 3 * m_width * m_height;
 	m_motionForward.resize(npix);
 	m_motionBackward.resize(npix, std::numeric_limits<Float>::infinity());
-
-	for (int i = 0; i < npix; i++)
-		m_motionForward[i] = stream->readFloat();
+	stream->readArray(m_motionForward.data(), npix);
 }
 
 
@@ -32,8 +30,7 @@ void MotionMap::serialize(Stream *stream, InstanceManager *manager) const
 	int npix = 3 * m_width*m_height;
 	stream->writeInt(m_width);
 	stream->writeInt(m_height);
-	for (int i = 0; i < npix; i++)
-		stream->writeFloat(m_motionForward[i]);
+	stream->writeArray(m_motionForward.data(), npix);
 }
 
 /// set complete frame

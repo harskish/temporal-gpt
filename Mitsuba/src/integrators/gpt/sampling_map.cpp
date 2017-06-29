@@ -398,13 +398,11 @@ SamplingMap::SamplingMap(Stream *stream, InstanceManager *manager)
 	m_map.resize(npix, 0); // initial_spp
 	m_accum_map.resize(npix, 0); // initial_spp
 
-	for (int i = 0; i < npix; i++){
-		m_map[i] = stream->readInt();
-		m_accum_map[i] = stream->readInt();
-		m_tmp[i] = stream->readFloat();
-		m_tmp2[i] = stream->readFloat();
-		m_spp[i] = stream->readFloat();
-	}
+	stream->readArray(m_map.data(), npix);
+	stream->readArray(m_accum_map.data(), npix);
+	stream->readArray(m_tmp.data(), npix);
+	stream->readArray(m_tmp2.data(), npix);
+	stream->readArray(m_spp.data(), npix);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -419,13 +417,12 @@ void SamplingMap::serialize(Stream *stream, InstanceManager *manager) const
 	stream->writeInt(m_requested_spp);
 //	stream->writeInt(m_real_spp);
 	int npix = m_size.x * m_size.y;
-	for (int i = 0; i < npix; i++){
-		stream->writeInt(m_map[i]);
-		stream->writeInt(m_accum_map[i]);
-		stream->writeFloat(m_tmp[i]);
-		stream->writeFloat(m_tmp2[i]);
-		stream->writeFloat(m_spp[i]);
-	}
+
+	stream->writeArray(m_map.data(), npix);
+	stream->writeArray(m_accum_map.data(), npix);
+	stream->writeArray(m_tmp.data(), npix);
+	stream->writeArray(m_tmp2.data(), npix);
+	stream->writeArray(m_spp.data(), npix);
 }
 
 MTS_IMPLEMENT_CLASS_S(SamplingMap, false, SerializableObject)
